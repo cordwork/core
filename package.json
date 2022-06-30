@@ -1,0 +1,37 @@
+{
+	"name": "typescript-template",
+	"description": "typescript, eslint, mocha test template",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"version": "1.0.0",
+	"author": {
+		"name": "raravel",
+		"email": "youn@tree-some.dev"
+	},
+	"license": "MIT",
+	"scripts": {
+		"test": "mocha -r ts-node/register ./tests/example.test.ts",
+		"dev": "nodemon --watch src --watch package.json --watch tsconfig.js --delay 1 --exec 'npm run lint --silent; ts-node' src/index.ts",
+		"lint": "eslint src/**/*",
+		"build": "tsc",
+		"prepublishOnly": "npm run build"
+	},
+	"devDependencies": {
+		"@types/chai": "^4.2.19",
+		"@types/mocha": "^8.2.2",
+		"@types/node": "16",
+		"@typescript-eslint/eslint-plugin": "^4.28.3",
+		"@typescript-eslint/parser": "^4.28.3",
+		"chai": "^4.3.4",
+		"eslint": "^7.30.0",
+		"mocha": "^9.0.2",
+		"nodemon": "^2.0.4",
+		"ts-node": "^10.8.1",
+		"typescript": "^4.7.4"
+	},
+	"keywords": [],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/raravel/typescript-template.git"
+	}
+}
