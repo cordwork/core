@@ -33,5 +33,9 @@
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/raravel/typescript-template.git"
+	},
+	"dependencies": {
+		"discord.js": "^13.8.1",
+		"reflect-metadata": "^0.1.13"
 	}
 }
