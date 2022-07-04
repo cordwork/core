@@ -1,1 +1,4 @@
-export * from './modules/module.decorator';
+export * from './modules';
+export * from './command.decorator';
+export * from './discord';
+export * from './inject.decorator';

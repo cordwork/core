@@ -1,29 +1,36 @@
-import { Client } from 'discord.js';
+import { Client, ClientOptions } from 'discord.js';
+import { Type } from './interfaces/type.interface';
+import { ModuleFactory } from './helpers/module-factory';
 
-export class Module {
 
-}
-
-export class CordWorkStatic {
+export class CordWork {
 
     private token!: string;
-    private apps: Module[] = [];
-    private client: Client = new Client();
+    private apps: Type<any>[] = [];
+	private client: Client;
+    private moduleFactory: ModuleFactory;
 
-    SetToken(token: string) {
+	constructor(options: ClientOptions = { intents: [] }) {
+		this.client = new Client(options);
+        this.moduleFactory = new ModuleFactory(this.client);
+	}
+
+    SetToken(token: string): CordWork {
         this.token = token;
         return this;
     }
 
-    AttachApp(module: Module) {
+    AttachApp(module: Type<any>): CordWork {
         this.apps.push(module);
         return this;
     }
 
-    Launch() {
-        this.client.login(this.token);
+    async Launch(): Promise<Client> {
+        await this.client.login(this.token);
+        for ( const app of this.apps ) {
+            this.moduleFactory.attach(app);
+        }
+        return this.client;
     }
 
 }
-
-export const CordWork = new CordWorkStatic();

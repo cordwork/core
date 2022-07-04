@@ -1,29 +1,33 @@
 import {
-	PROPERTY_DEPS_METADATA,
-	SELF_DECLARED_DEPS_METADATA,
+  PROPERTY_DEPS_METADATA,
+  SELF_DECLARED_DEPS_METADATA,
 } from '../constants';
 import { isUndefined } from '../utils/shared.utils';
 
+
 export function Inject<T = any>(token?: T) {
-	return (target: object, key: string | symbol, index?: number) => {
-		const type = token || Reflect.getMetadata('design:type', target, key);
-	
-		if (!isUndefined(index)) {
-			let dependencies =
-			Reflect.getMetadata(SELF_DECLARED_DEPS_METADATA, target) || [];
-			
-			dependencies = [...dependencies, { index, param: type }];
-			Reflect.defineMetadata(SELF_DECLARED_DEPS_METADATA, dependencies, target);
-			return;
-		}
-		let properties =
-		Reflect.getMetadata(PROPERTY_DEPS_METADATA, target.constructor) || [];
-		
-		properties = [...properties, { key, type }];
-		Reflect.defineMetadata(
-			PROPERTY_DEPS_METADATA,
-			properties,
-			target.constructor,
-		);
-	};
-}
+  return (target: object, key: string | symbol, index?: number) => {
+    const type = token || Reflect.getMetadata('design:type', target, key);
+
+    console.log('inject', target, type, index);
+    
+    if (!isUndefined(index)) {
+      let dependencies =
+      Reflect.getMetadata(SELF_DECLARED_DEPS_METADATA, target) || [];
+      
+      dependencies = [...dependencies, { index, param: type }];
+      Reflect.defineMetadata(SELF_DECLARED_DEPS_METADATA, dependencies, target);
+      return;
+    }
+    let properties =
+    Reflect.getMetadata(PROPERTY_DEPS_METADATA, target.constructor) || [];
+    
+    properties = [...properties, { key, type }];
+    console.log('Properties', properties);
+    Reflect.defineMetadata(
+      PROPERTY_DEPS_METADATA,
+      properties,
+      target.constructor,
+      );
+    };
+  }
