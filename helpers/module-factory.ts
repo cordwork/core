@@ -5,6 +5,7 @@ import { DiscordCommandMetadata } from '../interfaces/discords/discord-command.i
 import { CommandFactory } from './command-factory';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
+import { InteractionFactory } from './interaction-factory';
 import {
 	SELF_DECLARED_DEPS_METADATA,
 	DISCORD_CLIENT,
@@ -16,12 +17,14 @@ import { PromiseWorker } from './promise-worker';
 export class ModuleFactory {
 
 	private commandFactory: CommandFactory;
+	private interactionFactory: InteractionFactory;
 
 	constructor(
 		private client: Client,
 		private restClient: REST,
 	) {
 		this.commandFactory = new CommandFactory(this.client);
+		this.interactionFactory = new InteractionFactory(this.client);
 	}
 
 	async attach(app: Type<any>): Promise<void> {
@@ -58,16 +61,19 @@ export class ModuleFactory {
 		const guilds = Reflect.getMetadata(`${DISCORD_COMMAND}:guilds`, this.client) || [];
 		for ( const guild of guilds ) {
 			const commands = Reflect.getMetadata(`${DISCORD_COMMAND}:${guild}`, this.client) || [];
-			console.log('commands', commands);
 			worker.add(
 				this.restClient.put(
 					Routes.applicationGuildCommands(this.clientId, guild),
 					{
 						body: commands
 							.map((command) => {
-								const m = Reflect.getMetadata(DISCORD_COMMAND, command);
-								console.log('metadata', m, command);
-								return m;
+								const cmd = Reflect.getMetadata(DISCORD_COMMAND, command);
+								const provider = new command(...this.propertyRegister(command));
+								if ( typeof provider.listener !== 'function' ) {
+									throw Error(`@DiscordCommand('${cmd.name}') ${command.name} is must include listener method.`);
+								}
+								Reflect.defineMetadata(`${DISCORD_COMMAND}/${cmd.name}`, provider, this.client);
+								return cmd;
 							})
 							.map((command: DiscordCommandMetadata) => 
 								new SlashCommandBuilder()
@@ -80,6 +86,7 @@ export class ModuleFactory {
 			);
 		}
 		await worker.wait();
+		this.client.on('interactionCreate', this.interactionFactory.onInteractionCreate);
 	}
 
 	propertyRegister(target): any[] {

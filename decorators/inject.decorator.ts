@@ -8,8 +8,6 @@ import { isUndefined } from '../utils/shared.utils';
 export function Inject<T = any>(token?: T) {
   return (target: object, key: string | symbol, index?: number) => {
     const type = token || Reflect.getMetadata('design:type', target, key);
-
-    console.log('inject', target, type, index);
     
     if (!isUndefined(index)) {
       let dependencies =
@@ -23,7 +21,6 @@ export function Inject<T = any>(token?: T) {
     Reflect.getMetadata(PROPERTY_DEPS_METADATA, target.constructor) || [];
     
     properties = [...properties, { key, type }];
-    console.log('Properties', properties);
     Reflect.defineMetadata(
       PROPERTY_DEPS_METADATA,
       properties,
