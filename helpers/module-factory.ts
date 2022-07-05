@@ -30,6 +30,10 @@ export class ModuleFactory {
 	async attach(app: Type<any>): Promise<void> {
 		this.eventRegister(app);
 		this.commandFactory.attach(app);
+		const modules = Reflect.getMetadata('imports', app) || [];
+		for ( const module of modules ) {
+			this.attach(module);
+		}
 	}
 
 	eventRegister(app: Type<any>): void {
