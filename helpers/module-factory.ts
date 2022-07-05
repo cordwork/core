@@ -10,8 +10,7 @@ import {
 	DISCORD_CLIENT,
 	DISCORD_COMMAND,
 	DISCORD_EVENT,
-	COMPONENT_ID,
-	DISCORD_COMPONENT,
+	INJECTABLE_WATERMARK,
 } from '../constants';
 import { propertyRegister } from '../utils/property.utils';
 import { PromiseWorker } from './promise-worker';
@@ -30,12 +29,39 @@ export class ModuleFactory {
 	}
 
 	async attach(app: Type<any>): Promise<void> {
+		this.extentionRegister(app);
 		this.eventRegister(app);
 		this.componentRegister(app);
 		this.commandFactory.attach(app);
 		const modules = Reflect.getMetadata('imports', app) || [];
 		for ( const module of modules ) {
 			this.attach(module);
+		}
+	}
+
+	extentionRegister(app: Type<any>): void {
+		const extensions = Reflect.getMetadata('extensions', app) || [];
+		for ( const extension of extensions ) {
+			Reflect.defineMetadata(DISCORD_CLIENT, this.client, extension);
+			const id = Reflect.getMetadata(INJECTABLE_WATERMARK, extension);
+			const provider = new extension(...propertyRegister(extension));
+			
+			const components = Reflect.getMetadata('components', app) || [];
+			components.forEach((component) => {
+				Reflect.defineMetadata(id, provider, component);
+			});
+
+			const commands = Reflect.getMetadata('commands', app) || [];
+			commands.forEach((command) => {
+				Reflect.defineMetadata(id, provider, command);
+			});
+
+			const events = Reflect.getMetadata('events', app) || [];
+			events.forEach((event) => {
+				Reflect.defineMetadata(id, provider, event);
+			});
+
+			Reflect.defineMetadata(DISCORD_CLIENT, this.client, extension);
 		}
 	}
 

@@ -4,6 +4,7 @@ export const MODULE_METADATA = {
   COMMANDS: 'commands',
   GUILDS: 'guilds',
   COMPONENTS: 'components',
+  EXTENSIONS: 'extensions',
 };
 export const PARAMTYPES_METADATA = 'design:paramtypes';
 export const SELF_DECLARED_DEPS_METADATA = 'self:paramtypes';

@@ -1,7 +1,7 @@
-import { INJECTABLE_WATERMARK } from '../../constants';
+import { INJECTABLE_WATERMARK } from '../constants';
 
-export function Injectable(options?: InjectableOptions): ClassDecorator {
-  return (target: object) => {
-    Reflect.defineMetadata(INJECTABLE_WATERMARK, true, target);
+export function Injectable(id: string): ClassDecorator {
+  return (target) => {
+    Reflect.defineMetadata(INJECTABLE_WATERMARK, id, target);
   };
 }
