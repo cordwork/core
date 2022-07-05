@@ -5,6 +5,9 @@ export const isUndefined = (obj: any): obj is undefined =>
 export const isObject = (fn: any): fn is object =>
   !isNil(fn) && typeof fn === 'object';
 
+export const isArray = <T extends any>(fn: any): fn is Array<T> =>
+  isObject(fn) && Array.isArray(fn);
+
 export const isPlainObject = (fn: any): fn is object => {
   if (!isObject(fn)) {
     return false;
@@ -55,3 +58,6 @@ export const isNil = (val: any): val is null | undefined =>
   isUndefined(val) || val === null;
 export const isEmpty = (array: any): boolean => !(array && array.length > 0);
 export const isSymbol = (val: any): val is symbol => typeof val === 'symbol';
+
+
+export const wait = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));

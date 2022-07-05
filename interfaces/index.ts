@@ -1,4 +1,4 @@
 export * from './modules';
 export * from './type.interface';
-export * from './discord-event.interface';
+export * from './discords';
 export * from './shared.interface';
