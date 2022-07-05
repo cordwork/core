@@ -6,4 +6,5 @@ export interface ModuleMetadata {
   events?: Type<any>[];
   commands?: Type<any>[];
   guilds?: Guild[];
+  components?: Type<any>[];
 }

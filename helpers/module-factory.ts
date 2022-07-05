@@ -7,11 +7,13 @@ import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
 import { InteractionFactory } from './interaction-factory';
 import {
-	SELF_DECLARED_DEPS_METADATA,
 	DISCORD_CLIENT,
 	DISCORD_COMMAND,
 	DISCORD_EVENT,
+	COMPONENT_ID,
+	DISCORD_COMPONENT,
 } from '../constants';
+import { propertyRegister } from '../utils/property.utils';
 import { PromiseWorker } from './promise-worker';
 
 export class ModuleFactory {
@@ -29,10 +31,18 @@ export class ModuleFactory {
 
 	async attach(app: Type<any>): Promise<void> {
 		this.eventRegister(app);
+		this.componentRegister(app);
 		this.commandFactory.attach(app);
 		const modules = Reflect.getMetadata('imports', app) || [];
 		for ( const module of modules ) {
 			this.attach(module);
+		}
+	}
+
+	componentRegister(app: Type<any>): void {
+		const components = Reflect.getMetadata('components', app) || [];
+		for ( const handler of components ) {
+			Reflect.defineMetadata(DISCORD_CLIENT, this.client, handler);
 		}
 	}
 
@@ -46,7 +56,7 @@ export class ModuleFactory {
 				
 
 				const real = new handler(
-					...this.propertyRegister(handler),
+					...propertyRegister(handler),
 				);
 
 				if ( typeof real.listener !== 'function' ) {
@@ -72,7 +82,7 @@ export class ModuleFactory {
 						body: commands
 							.map((command) => {
 								const cmd = Reflect.getMetadata(DISCORD_COMMAND, command);
-								const provider = new command(...this.propertyRegister(command));
+								const provider = new command(...propertyRegister(command));
 								if ( typeof provider.listener !== 'function' ) {
 									throw Error(`@DiscordCommand('${cmd.name}') ${command.name} is must include listener method.`);
 								}
@@ -91,11 +101,6 @@ export class ModuleFactory {
 		}
 		await worker.wait();
 		this.client.on('interactionCreate', this.interactionFactory.onInteractionCreate);
-	}
-
-	propertyRegister(target): any[] {
-		const properties = Reflect.getMetadata(SELF_DECLARED_DEPS_METADATA, target) || [];
-		return properties.map(({ param }) => Reflect.getMetadata(param, target));
 	}
 
 	private get clientId() {
