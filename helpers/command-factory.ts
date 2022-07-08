@@ -1,11 +1,11 @@
-import { Client } from 'discord.js';
+import { CordWorkClient } from '../cordwork';
 import { Type } from '../interfaces/type.interface';
 import { DISCORD_COMMAND, DISCORD_OATH_GUILDS } from '../constants';
 import { isArray, isUndefined } from '../utils/shared.utils';
 import { GuildMetadata } from '../interfaces/discords/discord-guild.interface';
 
 export class CommandFactory {
-	constructor(private client: Client) {
+	constructor(private client: CordWorkClient) {
 		this.getGuildId = this.getGuildId.bind(this);
 	}
 

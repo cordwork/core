@@ -1,4 +1,4 @@
-import { Client } from 'discord.js';
+import { CordWorkClient } from '../cordwork';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { Type } from '../interfaces/type.interface';
 import { DiscordCommandMetadata } from '../interfaces/discords/discord-command.interface';
@@ -21,7 +21,7 @@ export class ModuleFactory {
 	private interactionFactory: InteractionFactory;
 
 	constructor(
-		private client: Client,
+		private client: CordWorkClient,
 		private restClient: REST,
 	) {
 		this.commandFactory = new CommandFactory(this.client);

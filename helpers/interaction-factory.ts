@@ -1,9 +1,10 @@
-import { Client, Interaction, CommandInteraction } from 'discord.js';
-import { DISCORD_COMMAND, DISCORD_COMPONENT, COMPONENT_ID } from '../constants';
+import { Interaction, CommandInteraction } from 'discord.js';
+import { DISCORD_COMMAND, DISCORD_COMPONENT } from '../constants';
+import { CordWorkClient } from '../cordwork';
 
 export class InteractionFactory {
 	constructor(
-		private client: Client,
+		private client: CordWorkClient,
 	) {
 		this.onInteractionCreate = this.onInteractionCreate.bind(this);
 	}

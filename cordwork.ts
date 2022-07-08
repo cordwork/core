@@ -5,17 +5,20 @@ import { wait } from './utils/shared.utils';
 import { REST } from '@discordjs/rest';
 import { DISCORD_OATH_GUILDS } from './constants';
 
+export class CordWorkClient extends Client {
+    
+}
 
 export class CordWork {
 
     private token!: string;
     private apps: Type<any>[] = [];
-	private client: Client;
+	private client: CordWorkClient;
     private restClient: REST;
     private moduleFactory: ModuleFactory;
 
 	constructor(options: ClientOptions = { intents: [] }) {
-		this.client = new Client(options);
+		this.client = new CordWorkClient(options);
         this.restClient = new REST({ version: '9' });
         this.moduleFactory = new ModuleFactory(this.client, this.restClient);
 	}

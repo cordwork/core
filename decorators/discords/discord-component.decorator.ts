@@ -1,5 +1,5 @@
-import { Client } from 'discord.js';
 import { DISCORD_CLIENT, COMPONENT_ID, SELF_DECLARED_DEPS_METADATA, DISCORD_COMPONENT } from '../../constants';
+import { CordWorkClient, } from '../../cordwork';
 import { Type } from '../../interfaces/type.interface';
 
 export function DiscordComponent(componentId?: string) {
@@ -8,7 +8,7 @@ export function DiscordComponent(componentId?: string) {
 	  componentId = `${Date.now()}-${target.name}`;
 	}
 	const newConstructor = class extends target {
-		constructor(client: Client, ...args: any[]) {
+		constructor(client: CordWorkClient, ...args: any[]) {
 			super(...args);
 			if ( typeof super.create !== 'function' )  {
 				throw Error(`@DiscordComponent('${componentId}') ${target.name} is must include create method.`);
