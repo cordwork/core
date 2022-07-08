@@ -1,6 +1,6 @@
 {
-	"name": "typescript-template",
-	"description": "typescript, eslint, mocha test template",
+	"name": "@cordwork/core",
+	"description": "A beautiful Discord bot framework.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"version": "1.0.0",
@@ -13,7 +13,7 @@
 		"test": "mocha -r ts-node/register ./tests/example.test.ts",
 		"dev": "nodemon --watch src --watch package.json --watch tsconfig.js --delay 1 --exec 'npm run lint --silent; ts-node' src/index.ts",
 		"lint": "eslint src/**/*",
-		"build": "tsc",
+		"build": "rm -rf dist; tsc",
 		"prepublishOnly": "npm run build"
 	},
 	"devDependencies": {
@@ -29,10 +29,10 @@
 		"ts-node": "^10.8.1",
 		"typescript": "^4.7.4"
 	},
-	"keywords": [],
+	"keywords": ["discord", "api", "bot", "client", "node", "discordapp"],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/raravel/typescript-template.git"
+		"url": "https://github.com/cordwork/core.git"
 	},
 	"dependencies": {
 		"@discordjs/rest": "^0.5.0",
