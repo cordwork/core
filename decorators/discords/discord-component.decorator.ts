@@ -1,5 +1,4 @@
 import { DISCORD_CLIENT, COMPONENT_ID, SELF_DECLARED_DEPS_METADATA, DISCORD_COMPONENT } from '../../constants';
-import { CordWorkClient, } from '../../cordwork';
 import { Type } from '../../interfaces/type.interface';
 
 export function DiscordComponent(componentId?: string) {
@@ -8,7 +7,7 @@ export function DiscordComponent(componentId?: string) {
 	  componentId = `${Date.now()}-${target.name}`;
 	}
 	const newConstructor = class extends target {
-		constructor(client: CordWorkClient, ...args: any[]) {
+		constructor(...args: any[]) {
 			super(...args);
 			if ( typeof super.create !== 'function' )  {
 				throw Error(`@DiscordComponent('${componentId}') ${target.name} is must include create method.`);
@@ -25,16 +24,15 @@ export function DiscordComponent(componentId?: string) {
 			if ( !this.component.customId ) {
 				throw Error(`@DiscordComponent('${componentId}') ${target.name} is must set customId when create component.`);
 			}
-			Reflect.defineMetadata(`${DISCORD_COMPONENT}/${this.component.customId}`, this, this.client);
 			return this.component;
+		}
+
+		get customId() {
+			return this.component?.customId;
 		}
 	};
 
-	const targetDependencies = Reflect.getMetadata(SELF_DECLARED_DEPS_METADATA, target);
-	targetDependencies.push({ index: -1, param: DISCORD_CLIENT });
-	Reflect.defineMetadata(SELF_DECLARED_DEPS_METADATA, targetDependencies, newConstructor);
 	Reflect.defineMetadata(COMPONENT_ID, componentId, newConstructor);
-
 	return newConstructor as Type<any>;
   }
 }

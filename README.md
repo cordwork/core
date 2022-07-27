@@ -89,13 +89,13 @@ export class CommandController {
 
 ### Event Handler
 ```typescript
-import { Inject, DiscordEvent, DISCORD_CLIENT, CordWorkClient } from '@cordwork/core';
+import { Inject, DiscordEvent, CordWorkClient } from '@cordwork/core';
 
 @DiscordEvent('ready')
 export class ReadyController {
 
 	constructor(
-		@Inject(DISCORD_CLIENT) private client: CordWorkClient
+		@Inject(CordWorkClient) private client: CordWorkClient
 	) {
 
 	}
@@ -115,12 +115,12 @@ export class ReadyController {
 
 ```typescript
 import { MessageButton } from 'discord.js';
-import { Inject, DISCORD_CLIENT, DiscordComponent, CordWorkClient } from '@cordwork/core';
+import { Inject, DiscordComponent, CordWorkClient } from '@cordwork/core';
 
 @DiscordComponent()
 export class ComponentClass {
 	constructor(
-		@Inject(DISCORD_CLIENT) private client: CordWorkClient,
+		@Inject(CordWorkClient) private client: CordWorkClient,
 	) {}
 
 	create(): MessageButton {

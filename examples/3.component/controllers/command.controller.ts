@@ -1,5 +1,5 @@
 import { MessageActionRow, MessageButton } from 'discord.js';
-import { DiscordCommand, Component, InjectComponent } from '../../../';
+import { DiscordCommand, Component, Inject } from '../../../';
 import { ComponentClass } from '../components/button.component';
 
 @DiscordCommand({
@@ -10,7 +10,7 @@ import { ComponentClass } from '../components/button.component';
 export class CommandController {
 
 	constructor(
-		@InjectComponent(ComponentClass) private component: Component<MessageButton>,
+		@Inject(ComponentClass) private component: Component<MessageButton>,
 	) {}
 
 	async listener(interaction): Promise<void> {
