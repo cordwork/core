@@ -2,7 +2,7 @@ import { Type } from '../interfaces/type.interface';
 import { isPlainObject } from '../utils/shared.utils';
 import { INJECTABLE_WATERMARK, MODULE_METADATA } from '../constants';
 import { InstanceWrapper } from './instance-wrapper';
-import { InjectableInstance } from 'interfaces/injectable-instance.interface';
+import { InjectableInstance } from '../interfaces/injectable-instance.interface';
 
 type ModuleTypes = keyof typeof MODULE_METADATA;
 
