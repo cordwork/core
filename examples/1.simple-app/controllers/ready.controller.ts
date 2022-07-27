@@ -4,7 +4,7 @@ import { Inject, DiscordEvent, DISCORD_CLIENT, CordWorkClient } from '../../../'
 export class ReadyController {
 
 	constructor(
-		@Inject(DISCORD_CLIENT) private client: CordWorkClient
+		@Inject(CordWorkClient) private client: CordWorkClient
 	) {
 
 	}

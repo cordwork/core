@@ -1,9 +1,9 @@
-import { Injectable, Inject, DISCORD_CLIENT, CordWorkClient } from "../../";
+import { Injectable, Inject, CordWorkClient } from "../../";
 
-@Injectable('service')
+@Injectable()
 export class Service {
 	constructor(
-		@Inject(DISCORD_CLIENT) private client: CordWorkClient
+		@Inject(CordWorkClient) private client: CordWorkClient
 	) {}
 
 	service() {

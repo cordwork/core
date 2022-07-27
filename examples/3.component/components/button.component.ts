@@ -1,10 +1,10 @@
 import { MessageButton } from 'discord.js';
-import { Inject, DISCORD_CLIENT, DiscordComponent, CordWorkClient } from '../../../';
+import { Inject, DiscordComponent, CordWorkClient } from '../../../';
 
 @DiscordComponent()
 export class ComponentClass {
 	constructor(
-		@Inject(DISCORD_CLIENT) private client: CordWorkClient,
+		@Inject(CordWorkClient) private client: CordWorkClient,
 	) {}
 
 	create(): MessageButton {

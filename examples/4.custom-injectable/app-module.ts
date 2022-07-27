@@ -7,7 +7,7 @@ import { Service } from './service.controller';
 @Module({
 	events: [ReadyController, InteractionController],
 	commands: [CommandController],
-	extensions: [Service],
+	imports: [Service],
 })
 export class App {
 
