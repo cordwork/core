@@ -43,13 +43,11 @@ export class CordWorkContainer {
 
 	async scan(target: Type<any> = this.module): Promise<void> {
 		const imports = Reflect.getMetadata(MODULE_METADATA.IMPORTS, target) || [];
-		await new PromiseWorker(
-			imports.map(async (injectable) =>
-				await this.attachProvider(
-					this.serialize(injectable)
-				)
-			)
-		).wait();
+		for ( const injectable of imports ) {
+			await this.attachProvider(
+				await this.serialize(injectable),
+			);
+		}
 
 		const components = Reflect.getMetadata(MODULE_METADATA.COMPONENTS, target) || [];
 		for ( const component of components) {
@@ -144,7 +142,17 @@ export class CordWorkContainer {
 			if ( !isPlainObject(inject.primitive) ) {
 				inject.arguments = this.propertyRegister(inject.primitive);
 			}
-			this.provider.set(inject.token, await inject.instance);
+			if ( inject.imports.length > 0 ) {
+				for ( const injectable of inject.imports ) {
+					await this.attachProvider(
+						this.serialize(injectable)
+					);
+				}
+			}
+			const instance = await inject.instance;
+			if ( instance ) {
+				this.provider.set(inject.token, instance);
+			}
 			return;
 		}
 		// 생성자일 경우 새 모듈 객체로 인식

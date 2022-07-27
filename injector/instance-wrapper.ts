@@ -17,6 +17,7 @@ export class InstanceWrapper implements InjectableInstance {
 	private useRandomId = false;
 	public id: any;
 	public arguments: any[] = [];
+	public readonly imports: any[] = [];
 
 	constructor(
 		private module: Type<any>|InjectableInstance,
@@ -35,8 +36,10 @@ export class InstanceWrapper implements InjectableInstance {
 	}
 
 	createInstance(...args: any[]): any {
-		this._instance = new (this.module as Type<any>)(...args);
-		return this._instance;
+		if ( this.module.constructor.name === 'Function' ) {
+			this._instance = new (this.module as Type<any>)(...args);
+			return this._instance;
+		}
 	}
 
 	get token(): any {
