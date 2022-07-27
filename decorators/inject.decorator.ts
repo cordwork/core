@@ -14,7 +14,7 @@ export function Inject<T = any>(token?: T) {
       let dependencies =
       Reflect.getMetadata(SELF_DECLARED_DEPS_METADATA, target) || [];
       
-      dependencies = [...dependencies, { index, param: type }];
+      dependencies = [{ index, param: type }, ...dependencies];
       Reflect.defineMetadata(SELF_DECLARED_DEPS_METADATA, dependencies, target);
       return;
     }

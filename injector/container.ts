@@ -141,7 +141,9 @@ export class CordWorkContainer {
 
 	private async attachProvider(inject: InstanceWrapper) {
 		if ( inject.injectable ) {
-			inject.arguments = this.propertyRegister(inject.primitive);
+			if ( !isPlainObject(inject.primitive) ) {
+				inject.arguments = this.propertyRegister(inject.primitive);
+			}
 			this.provider.set(inject.token, await inject.instance);
 			return;
 		}

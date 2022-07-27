@@ -1,6 +1,6 @@
 import { Type } from '../interfaces/type.interface';
 import { InjectableInstance } from '../interfaces/injectable-instance.interface';
-import { INJECTABLE_WATERMARK } from '../constants';
+import { INJECTABLE_WATERMARK, SELF_DECLARED_DEPS_METADATA } from '../constants';
 import { v4 as uuid } from 'uuid';
 import {
 	isUndefined,
@@ -15,31 +15,28 @@ import {
 export class InstanceWrapper implements InjectableInstance {
 	private _instance: any;
 	private useRandomId = false;
-	private _id: any;
-	private _args: any[] = [];
+	public id: any;
+	public arguments: any[] = [];
 
 	constructor(
 		private module: Type<any>|InjectableInstance,
 		id?: any,
 	) {
+		if ( isPlainObject(this.module) ) {
+			Object.assign(this, this.module);
+			return;
+		}
 		if ( isUndefined(id) ) {
 			this.useRandomId = true;
 			id = uuid();
 		}
-		this._id = id;
+		this.id = id;
 
-		if ( isPlainObject(this.module) ) {
-			Object.assign(this, this.module);
-		}
 	}
 
 	createInstance(...args: any[]): any {
 		this._instance = new (this.module as Type<any>)(...args);
 		return this._instance;
-	}
-
-	get id(): any {
-		return this._id;
 	}
 
 	get token(): any {
@@ -52,15 +49,15 @@ export class InstanceWrapper implements InjectableInstance {
 				const primitive = this.primitive as InjectableInstance;
 				if ( isFunction(primitive?.useFactory) ) {
 					const factory = primitive.useFactory as (...args: any[]) => any;
-					return await factory();
+					return await factory(...this.arguments);
 				} else if ( !isUndefined(primitive?.useClass) ) {
-					return await new primitive.useClass();
+					return await new primitive.useClass(...this.arguments);
 				} else if ( !isUndefined(primitive.useValue) ) {
 					return primitive.useValue;
 				}
 			}
 			
-			return this._instance || this.createInstance(...this._args);
+			return this._instance || this.createInstance(...this.arguments);
 		})();
 	}
 
@@ -70,9 +67,5 @@ export class InstanceWrapper implements InjectableInstance {
 
 	get primitive(): Type<any>|InjectableInstance {
 		return this.module;
-	}
-
-	set arguments(args: any[]) {
-		this._args = args;
 	}
 }

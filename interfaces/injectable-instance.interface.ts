@@ -5,6 +5,7 @@ export interface InjectableInstance<T = any> {
 	instance: T;
 	token: string;
 	id: string;
+	arguments: any[];
 	useFactory?: (...args: any[]) => any;
 	useValue?: any;
 	useClass?: new (...args: any[]) => any;
