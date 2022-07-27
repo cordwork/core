@@ -1,11 +1,10 @@
-import { Client } from 'discord.js';
-import { Inject, DiscordEvent, DISCORD_CLIENT } from '../../../';
+import { Inject, DiscordEvent, CordWorkClient } from '../../../';
 
 @DiscordEvent('ready')
 export class ReadyController {
 
 	constructor(
-		@Inject(DISCORD_CLIENT) private client: Client
+		@Inject(CordWorkClient) private client: CordWorkClient
 	) {
 
 	}

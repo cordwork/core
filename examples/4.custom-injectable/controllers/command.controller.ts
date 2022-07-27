@@ -9,7 +9,7 @@ import { Service } from '../service.controller';
 export class CommandController {
 
 	constructor(
-		@Inject('service') private service: Service,
+		@Inject(Service) private service: Service,
 	) {
 	}
 

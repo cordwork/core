@@ -1,10 +1,9 @@
-import { Client } from 'discord.js';
-import { Injectable, Inject, DISCORD_CLIENT } from "../../";
+import { Injectable, Inject, CordWorkClient } from "../../";
 
-@Injectable('service')
+@Injectable()
 export class Service {
 	constructor(
-		@Inject(DISCORD_CLIENT) private client: Client
+		@Inject(CordWorkClient) private client: CordWorkClient
 	) {}
 
 	service() {
