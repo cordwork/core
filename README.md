@@ -33,10 +33,10 @@ import { CordWork } from '@cordwork/core';
 import { App } from './app.module';
 
 async function bootstrap() {
-	const client = await new CordWork()
-		.SetToken(process.env.BOT_TOKEN || '')
-		.AttachApp(App)
-		.Launch();
+  const client = await new CordWork()
+    .SetToken(process.env.BOT_TOKEN || '')
+    .AttachApp(App)
+    .Launch();
 }
 bootstrap();
 ```
@@ -75,15 +75,14 @@ Controller is an object that manages message components([Button](https://discord
 import { DiscordCommand } from '@coredwork/core';
 
 @DiscordCommand({
-	name: 'ping',
-	description: 'The test command.',
-	guilds: ['my guild name'],
+  name: 'ping',
+  description: 'The test command.',
+  guilds: ['my guild name'],
 })
 export class CommandController {
-
-	async listener(interaction): Promise<void> {
-		interaction.reply('Pong!');
-	}
+  async listener(interaction): Promise<void> {
+    interaction.reply('Pong!');
+  
 }
 ```
 
@@ -94,20 +93,17 @@ import { Inject, DiscordEvent, CordWorkClient } from '@cordwork/core';
 @DiscordEvent('ready')
 export class ReadyController {
 
-	constructor(
-		@Inject(CordWorkClient) private client: CordWorkClient
-	) {
+  constructor(
+    @Inject(CordWorkClient) private client: CordWorkClient
+  ) {}
 
-	}
-
-	async listener(): Promise<void> {
-		console.log(`Logged in as ${this.client?.user?.tag}!`);
-		const application = this.client.application;
-		if ( application ) {
-			console.log('client id', application.id);
-		}
-	}
-
+  async listener(): Promise<void> {
+    console.log(`Logged in as ${this.client?.user?.tag}!`);
+    const application = this.client.application;
+    if ( application ) {
+      console.log('client id', application.id);
+    }
+  }
 }
 ```
 
@@ -119,19 +115,19 @@ import { Inject, DiscordComponent, CordWorkClient } from '@cordwork/core';
 
 @DiscordComponent()
 export class ComponentClass {
-	constructor(
-		@Inject(CordWorkClient) private client: CordWorkClient,
-	) {}
+  constructor(
+    @Inject(CordWorkClient) private client: CordWorkClient,
+  ) {}
 
-	create(): MessageButton {
-		return new MessageButton()
-			.setCustomId('mybutton')
-			.setLabel(`LABEL ${this.client?.user?.tag}`)
-			.setStyle('PRIMARY');
-	}
+  create(): MessageButton {
+    return new MessageButton()
+      .setCustomId('mybutton')
+      .setLabel(`LABEL ${this.client?.user?.tag}`)
+      .setStyle('PRIMARY');
+  }
 
-	listener(interaction): void {
-		interaction.reply('button click');
-	}
+  listener(interaction): void {
+    interaction.reply('button click');
+  }
 }
 ```
