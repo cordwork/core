@@ -15,7 +15,6 @@ import {
 import {
 	isPlainObject,
 	isFunction,
-	isArray,
 } from '../utils/shared.utils';
 import { InstanceWrapper } from './instance-wrapper';
 import { CordWorkClient } from '../cordwork-client';
@@ -24,6 +23,7 @@ import { DiscordCommandMetadata } from '../interfaces/discords/discord-command.i
 import { CommandFactory } from '../helpers/command-factory';
 import { PromiseWorker } from '../helpers/promise-worker';
 import { CordWork } from '../cordwork';
+import { Logger } from 'tslog';
 
 export class CordWorkContainer {
 	private provider = new Map<any, any>();
@@ -31,6 +31,11 @@ export class CordWorkContainer {
 	private command = new Map<string, any>();
 	private component = new Map<string, any>();
 	private commandFactory;
+	private log = new Logger({
+		name: 'CordWorkContainer',
+		displayFilePath: 'hidden',
+		displayFunctionName: false,
+	});
 
 	constructor(
 		private module: Type<any>,
@@ -38,7 +43,12 @@ export class CordWorkContainer {
 		private app: CordWork,
 	) {
 		this.provider.set(CordWorkClient, this.app.client);
-		this.commandFactory = new CommandFactory(this, this.definedCommandObject);
+		this.commandFactory =
+			new CommandFactory(
+				this,
+				this.definedCommandObject,
+				this.log
+			);
 	}
 
 	async scan(target: Type<any> = this.module): Promise<void> {
@@ -55,6 +65,7 @@ export class CordWorkContainer {
 			const register = new component(...this.propertyRegister(component));
 			this.provider.set(component, register);
 			this.component.set(register.customId, register);
+			this.log.debug(`Regist @DiscordComponent() ${component.name}`);
 		}
 
 		const events = Reflect.getMetadata(MODULE_METADATA.EVENTS, target) || [];
@@ -62,8 +73,9 @@ export class CordWorkContainer {
 			const event = Reflect.getMetadata(DISCORD_EVENT, handlerConstant);
 			const handler = new handlerConstant(...this.propertyRegister(handlerConstant));
 			if ( !isFunction(handler.listener) ) {
-				throw Error(`@DiscordEvent(${event}) ${handlerConstant.name} must be has listener method.`);
+				throw Error(`@DiscordEvent('${event}') ${handlerConstant.name} must be has listener method.`);
 			}
+			this.log.debug(`Regist @DiscordEvent('${event}') ${handlerConstant.name}`);
 			this.app.client.on(event, handler.listener.bind(handler));
 		}
 
@@ -113,7 +125,6 @@ export class CordWorkContainer {
 		} // for ( const guild of guilds.values() )
 
 		await worker.wait();
-
 		this.app.client.on('interactionCreate', this.onInteractionEvent.bind(this));
 	}
 

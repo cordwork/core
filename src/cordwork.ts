@@ -5,7 +5,7 @@ import { REST } from '@discordjs/rest';
 import { CordWorkClient } from './cordwork-client';
 import { CordWorkContainer } from './injector/container';
 import { Serializer } from './injector/serializer';
-
+import { Logger } from 'tslog';
 
 // 순서: import -> 나머지 이벤트 순
 
@@ -16,6 +16,11 @@ export class CordWork {
     private container!: CordWorkContainer;
 	public readonly client: CordWorkClient;
     public readonly rest: REST = new REST({ version: '9' });
+	private log = new Logger({
+		name: 'CordWork',
+		displayFilePath: 'hidden',
+		displayFunctionName: false,
+	});
 
 	constructor(options: ClientOptions = { intents: [] }) {
 		this.client = new CordWorkClient(options);
@@ -44,6 +49,7 @@ export class CordWork {
 
 
         await this.initialize();
+		
         await this.client.login(this.token);
 		await this.waitReady();
         await this.container.register();
@@ -52,6 +58,11 @@ export class CordWork {
     }
 
     private async initialize() {
+
+		this.client.once('ready', () => {
+			this.log.debug(`Ready application ${this.client?.user?.tag}`);
+		});
+
         this.container = new CordWorkContainer(
             this.app,
             Serializer.Serialize,
