@@ -1,9 +1,10 @@
 import { Guild } from "./discord-guild.interface";
+import {
+	ApplicationCommandSubCommand,
+	ApplicationCommandOptionType
+} from "discord.js";
 
-export interface DiscordCommandMetadata {
-	name: string;
-	description: string;
-	options?: any[];
-	defaultPermission?: boolean;
+export type DiscordCommandMetadata =  {
+	type?: ApplicationCommandOptionType;
 	guilds?: Guild[];
-}
+} & Omit<ApplicationCommandSubCommand, 'type'>;

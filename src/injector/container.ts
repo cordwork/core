@@ -2,7 +2,6 @@ import {
 	Interaction,
 	MessageComponentInteraction,
 } from 'discord.js';
-import { SlashCommandBuilder } from '@discordjs/builders';
 import { Routes } from 'discord-api-types/v9';
 import { Type } from '../interfaces/type.interface';
 import {
@@ -19,7 +18,6 @@ import {
 import { InstanceWrapper } from './instance-wrapper';
 import { CordWorkClient } from '../cordwork-client';
 import { Guild } from '../interfaces/discords/discord-guild.interface';
-import { DiscordCommandMetadata } from '../interfaces/discords/discord-command.interface';
 import { CommandFactory } from '../helpers/command-factory';
 import { PromiseWorker } from '../helpers/promise-worker';
 import { CordWork } from '../cordwork';
@@ -119,12 +117,6 @@ export class CordWorkContainer {
 								this.command.set(cmd.name, provider);
 								return cmd;
 							})
-							.map((command: DiscordCommandMetadata) => 
-								new SlashCommandBuilder()
-									.setName(command.name)
-									.setDescription(command.description)
-									.toJSON()
-							),
 					},
 				)
 			)

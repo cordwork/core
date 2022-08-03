@@ -9,6 +9,7 @@ import { isArray, isUndefined } from '../utils/shared.utils';
 import { GuildMetadata, Guild } from '../interfaces/discords/discord-guild.interface';
 import { DiscordCommandMetadata } from '../interfaces/discords/discord-command.interface';
 import { Logger } from 'tslog';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 
 export class CommandFactory {
 	constructor(
@@ -31,6 +32,12 @@ export class CommandFactory {
 			}
 
 			this.log.debug(`Regist @DiscordCommand('${metadata.name}') ${commandRegist.name}`);
+
+			delete commandRegist.guilds;
+
+			if ( !commandRegist.type ) {
+				commandRegist.type = ApplicationCommandOptionTypes.SUB_COMMAND;
+			}
 
 			for ( const guild of guilds.map((g) => typeof g === 'string' ? { name: g } : g) ) {
 				const cmds = this.commands.get(guild.name) || [];
