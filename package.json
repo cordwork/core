@@ -43,7 +43,7 @@
 	},
 	"dependencies": {
 		"@discordjs/rest": "^0.5.0",
-		"discord.js": "^13.8.1",
+		"discord.js": "^14.1.2",
 		"reflect-metadata": "^0.1.13",
 		"tslog": "^3.3.3",
 		"uuid": "^8.3.2"

@@ -135,7 +135,6 @@ export class CordWorkContainer {
 		} else if (
 			interaction.isButton() ||
 			interaction.isAutocomplete() ||
-			interaction.isContextMenu() ||
 			interaction.isSelectMenu()
 		) {
 			const inter = interaction as MessageComponentInteraction;
