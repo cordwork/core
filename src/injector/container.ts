@@ -54,6 +54,12 @@ export class CordWorkContainer {
 	async scan(target: Type<any> = this.module): Promise<void> {
 		const imports = Reflect.getMetadata(MODULE_METADATA.IMPORTS, target) || [];
 		for ( const injectable of imports ) {
+			const guilds = Reflect.getMetadata(MODULE_METADATA.GUILDS, target) || [];
+			if ( guilds.length ) {
+				if ( !Reflect.getMetadata(MODULE_METADATA.GUILDS, injectable) ) {
+					Reflect.defineMetadata(MODULE_METADATA.GUILDS, guilds, injectable);
+				}
+			}
 			await this.attachProvider(
 				await this.serialize(injectable),
 			);
