@@ -22,13 +22,15 @@ import { CommandFactory } from '../helpers/command-factory';
 import { PromiseWorker } from '../helpers/promise-worker';
 import { CordWork } from '../cordwork';
 import { Logger } from 'tslog';
+import { FetcherFactory } from '../helpers/fetcher-factory';
 
 export class CordWorkContainer {
 	private provider = new Map<any, any>();
 	private definedCommandObject = new Map<Guild, any[]>();
 	private command = new Map<string, any>();
 	private component = new Map<string, any>();
-	private commandFactory;
+	private commandFactory: CommandFactory;
+	private fetcherFactory: FetcherFactory;
 	private log = new Logger({
 		name: 'CordWorkContainer',
 		displayFilePath: 'hidden',
@@ -46,6 +48,11 @@ export class CordWorkContainer {
 				this,
 				this.definedCommandObject,
 				this.log
+			);
+		this.fetcherFactory =
+			new FetcherFactory(
+				this.provider,
+				this.app,
 			);
 	}
 
@@ -93,8 +100,16 @@ export class CordWorkContainer {
 			guilds,
             this,
         );
-
 		const worker = new PromiseWorker();
+
+		/*
+		worker.add(
+			this.fetcherFactory.fetch(
+				guilds.values()
+			)
+		);
+		*/
+
 		this.commandFactory.guildRegister();
 		for ( const guild of guilds.values() ) {
 			const commands = this.definedCommandObject.get(guild.name) || [];

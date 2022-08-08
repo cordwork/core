@@ -1,9 +1,14 @@
+import { CordWorkClientEvents } from "./cordwork-event";
+
 export const MODULE_METADATA = {
   IMPORTS: 'imports',
   EVENTS: 'events',
   COMMANDS: 'commands',
   GUILDS: 'guilds',
   COMPONENTS: 'components',
+};
+export const CORDWORK_EVENTS: Record<string, keyof CordWorkClientEvents> = {
+  READY: 'CordWork:ready',
 };
 export const PARAMTYPES_METADATA = 'design:paramtypes';
 export const SELF_DECLARED_DEPS_METADATA = 'self:paramtypes';

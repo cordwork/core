@@ -6,6 +6,7 @@ import { CordWorkClient } from './cordwork-client';
 import { CordWorkContainer } from './injector/container';
 import { Serializer } from './injector/serializer';
 import { Logger } from 'tslog';
+import { CORDWORK_EVENTS } from './constants';
 
 // 순서: import -> 나머지 이벤트 순
 
@@ -54,12 +55,14 @@ export class CordWork {
 		await this.waitReady();
         await this.container.register();
 
+        this.client.emit(CORDWORK_EVENTS.READY);
+
         return this.client;
     }
 
     private async initialize() {
 
-		this.client.once('ready', () => {
+		this.client.once(CORDWORK_EVENTS.READY, () => {
 			this.log.debug(`Ready application ${this.client?.user?.tag}`);
 		});
 
