@@ -19,8 +19,8 @@ export function DiscordComponent(componentId?: string) {
 			this.create(); // Actions on information that has already been generated.
 		}
 
-		create() {
-			this.component = super.create();
+		create(...args) {
+			this.component = super.create(...args);
 			if ( !this.component.customId ) {
 				throw Error(`@DiscordComponent('${componentId}') ${target.name} is must set customId when create component.`);
 			}

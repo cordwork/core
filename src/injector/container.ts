@@ -76,7 +76,7 @@ export class CordWorkContainer {
 			const register = new component(...this.propertyRegister(component));
 			this.provider.set(component, register);
 			this.component.set(register.customId, register);
-			this.log.debug(`Regist @DiscordComponent() ${component.name}`);
+			this.log.debug(`Regist @DiscordComponent() ${component.__proto__.name}`);
 		}
 
 		const events = Reflect.getMetadata(MODULE_METADATA.EVENTS, target) || [];
