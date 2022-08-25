@@ -1,19 +1,16 @@
-import { DISCORD_CLIENT, COMPONENT_ID, SELF_DECLARED_DEPS_METADATA, DISCORD_COMPONENT } from '../../constants';
+import { COMPONENT_ID } from '../../constants';
 import { Type } from '../../interfaces/type.interface';
 
-export function DiscordComponent(componentId?: string) {
+export function DiscordComponent(customId: string) {
   return (target: Type<any>) => {
-	if ( !componentId ) {
-	  componentId = `${Date.now()}-${target.name}`;
-	}
-	const newConstructor = class extends target {
+	const componentContructor = class extends target {
 		constructor(...args: any[]) {
 			super(...args);
 			if ( typeof super.create !== 'function' )  {
-				throw Error(`@DiscordComponent('${componentId}') ${target.name} is must include create method.`);
+				throw Error(`@DiscordComponent('${customId}') ${target.name} is must include create method.`);
 			}
 			if ( typeof super.listener !== 'function' ) {
-				throw Error(`@DiscordComponent('${componentId}') ${target.name} is must include listener method.`);
+				throw Error(`@DiscordComponent('${customId}') ${target.name} is must include listener method.`);
 			}
 
 			this.create(); // Actions on information that has already been generated.
@@ -21,8 +18,11 @@ export function DiscordComponent(componentId?: string) {
 
 		create(...args) {
 			this.component = super.create(...args);
-			if ( !this.component.customId ) {
-				throw Error(`@DiscordComponent('${componentId}') ${target.name} is must set customId when create component.`);
+			this.component.customId = customId;
+			this.component.custom_id = customId;
+			if ( this.component?.data ) {
+				this.component.data.customId = customId;
+				this.component.data.custom_id = customId;
 			}
 			return this.component;
 		}
@@ -31,8 +31,8 @@ export function DiscordComponent(componentId?: string) {
 			return this.component?.customId;
 		}
 	};
-
-	Reflect.defineMetadata(COMPONENT_ID, componentId, newConstructor);
+	const newConstructor = componentContructor;
+	Reflect.defineMetadata(COMPONENT_ID, customId, newConstructor);
 	return newConstructor as Type<any>;
   }
 }

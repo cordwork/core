@@ -22,7 +22,6 @@ import { CommandFactory } from '../helpers/command-factory';
 import { PromiseWorker } from '../helpers/promise-worker';
 import { CordWork } from '../cordwork';
 import { Logger } from 'tslog';
-import { FetcherFactory } from '../helpers/fetcher-factory';
 
 export class CordWorkContainer {
 	private provider = new Map<any, any>();
@@ -30,7 +29,6 @@ export class CordWorkContainer {
 	private command = new Map<string, any>();
 	private component = new Map<string, any>();
 	private commandFactory: CommandFactory;
-	private fetcherFactory: FetcherFactory;
 	private log = new Logger({
 		name: 'CordWorkContainer',
 		displayFilePath: 'hidden',
@@ -48,11 +46,6 @@ export class CordWorkContainer {
 				this,
 				this.definedCommandObject,
 				this.log
-			);
-		this.fetcherFactory =
-			new FetcherFactory(
-				this.provider,
-				this.app,
 			);
 	}
 
@@ -76,7 +69,7 @@ export class CordWorkContainer {
 			const register = new component(...this.propertyRegister(component));
 			this.provider.set(component, register);
 			this.component.set(register.customId, register);
-			this.log.debug(`Regist @DiscordComponent() ${component.__proto__.name}`);
+			this.log.debug(`Regist @DiscordComponent('${register.customId}') ${component.__proto__.name}`);
 		}
 
 		const events = Reflect.getMetadata(MODULE_METADATA.EVENTS, target) || [];
@@ -101,14 +94,6 @@ export class CordWorkContainer {
             this,
         );
 		const worker = new PromiseWorker();
-
-		/*
-		worker.add(
-			this.fetcherFactory.fetch(
-				guilds.values()
-			)
-		);
-		*/
 
 		this.commandFactory.guildRegister();
 		for ( const guild of guilds.values() ) {
@@ -150,7 +135,8 @@ export class CordWorkContainer {
 		} else if (
 			interaction.isButton() ||
 			interaction.isAutocomplete() ||
-			interaction.isSelectMenu()
+			interaction.isSelectMenu() ||
+			interaction.isModalSubmit()
 		) {
 			const inter = interaction as MessageComponentInteraction;
 			const provider = this.component.get(inter.customId);
